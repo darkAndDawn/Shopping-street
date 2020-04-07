@@ -1,9 +1,5 @@
 <template>
   <div>
-    <nav-bar class="nav">
-      <div slot="center">购物街</div>
-    </nav-bar>
-
     <tab-bar>
       <tab-bar-item path="/home">
         <img src="../../assets/img/tabbar/home.svg" alt="" slot="item-img">
@@ -30,21 +26,17 @@
 </template>
 
 <script>
-  import NavBar from "../navbar/NavBar";
   import TabBar from "../tabbar/TabBar";
   import TabBarItem from "../tabbar/TabBarItem";
 
   export default {
     name: "TabBarMain",
     components: {
-      NavBar, TabBar, TabBarItem
+      TabBar, TabBarItem
     }
   }
 </script>
 
 <style scoped>
-  .nav{
-    background: #ff5777;
-    color: white;
-  }
+
 </style>

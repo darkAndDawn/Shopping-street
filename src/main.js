@@ -4,16 +4,19 @@ import router from './router'
 import store from './store'
 
 import {request} from "../network/request";
+import url from "../network/url";
 
+Vue.prototype.request = request
+Vue.prototype.url = url
 request({
-  url:"/home/multidata"
-}).then(res=>{
-  console.log(res);
+    url: url.multidata,
+}).then(res => {
+    // console.log(res);
 })
 Vue.config.productionTip = false
 
 new Vue({
-  router,
-  store,
-  render: h => h(App)
+    router,
+    store,
+    render: h => h(App)
 }).$mount('#app')
