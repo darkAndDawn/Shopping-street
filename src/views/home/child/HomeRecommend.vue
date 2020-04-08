@@ -31,13 +31,12 @@
         display: flex;
         font-size: 13px;
         text-align: center;
-
         border-bottom: 10px solid #eee;
         padding: 10px 0;
     }
     .recommend img {
-        width: 80px;
-        height: 80px;
+        width: 25vw;
+        /*height: 80px;*/
         flex: 1;
         margin-bottom: 5px;
     }

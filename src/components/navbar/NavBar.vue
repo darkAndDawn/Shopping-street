@@ -28,7 +28,7 @@
   left: 0;
   right: 0;
   display: flex;
-  z-index: 999;
+  z-index: 99;
   text-align: center;
   line-height: 44px;
 }

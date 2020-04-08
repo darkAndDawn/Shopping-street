@@ -1,10 +1,23 @@
 <template>
     <div>
-        <h1>首页</h1>
+        <!--        头部导航-->
         <home-nav-bar></home-nav-bar>
-        <home-swiper :bannerList="bannerList"></home-swiper>
-        <home-recommend :recommendList="recommendList"></home-recommend>
-        <home-pop></home-pop>
+        <div id="wrap">
+            <div class="content">
+                <!--        轮播图-->
+                <home-swiper :bannerList="bannerList"></home-swiper>
+                <!--        推荐-->
+                <home-recommend :recommendList="recommendList"></home-recommend>
+                <!--        流行-->
+                <home-pop></home-pop>
+                <!--        tab切换-->
+                <home-tab-control :tabData="['流行','新款','精选']" @tabClick="tabClick"></home-tab-control>
+                <!--        商品列表-->
+                <home-message-show :showList="goods[clickType].list" :bscroll="bscroll"></home-message-show>
+            </div>
+        </div>
+        <!--        回到顶部-->
+        <go-top @click.native="goTop" v-show="isTopShow"></go-top>
     </div>
 </template>
 
@@ -13,32 +26,109 @@
     import HomeSwiper from "./child/HomeSwiper";
     import HomeRecommend from "./child/HomeRecommend";
     import HomePop from "./child/HomePop";
+    import HomeTabControl from "./child/HomeTabControl";
+    import HomeMessageShow from "./child/HomeMessageShow";
+    import GoTop from "./child/GoTop";
+    import Scroll from 'better-scroll'
+
     export default {
         name: "Home",
         components: {
             HomeNavBar,
             HomeSwiper,
             HomeRecommend,
-            HomePop
+            HomePop,
+            HomeTabControl,
+            HomeMessageShow,
+            GoTop
         },
         data() {
             return {
+                isTopShow: false,
+                bscroll: null,
                 bannerList: [],//轮播图数据
                 recommendList: [],//推荐的数据
+                goods: {
+                    pop: {page: 1, list: []},
+                    new: {page: 1, list: []},
+                    sell: {page: 1, list: []},
+                },
+                clickType: 'pop'
             }
         },
         created() {
-            this.request({
-                url: this.url.multidata
-            }).then(res => {
-                console.log(res)
-                this.bannerList = res.data.banner.list
-                this.recommendList = res.data.recommend.list
+            this.getBannerAndRecommend()
+            this.getGoodsData('pop')
+            this.getGoodsData('new')
+            this.getGoodsData('sell')
+        },
+        mounted() {
+            this.bscroll = new Scroll('#wrap', {
+                click: true,
+                pullUpLoad: true
             })
+            this.bscroll.on('pullingUp', () => {
+                this.getGoodsData(this.clickType)
+            })
+            this.bscroll.on('scroll', o => {
+               this.isTopShow = -o.y > 1500
+            })
+        },
+        methods: {
+            //回到顶部
+            goTop() {
+                this.bscroll.scrollTo(0, 0, 400)
+            },
+            //切换
+            tabClick(val) {
+                switch (val) {
+                    case 0:
+                        this.clickType = 'pop'
+                        break
+                    case 1:
+                        this.clickType = 'new'
+                        break
+                    case 2:
+                        this.clickType = 'sell'
+                        break
+                }
+            },
+            //获取轮播图和推荐数据
+            getBannerAndRecommend() {
+                this.request({
+                    url: this.url.multidata
+                }).then(res => {
+                    this.bannerList = res.data.banner.list
+                    this.recommendList = res.data.recommend.list
+                })
+            },
+            //获取商品展示的数据
+            getGoodsData(type) {
+                let page = ++this.goods[type].page
+                this.request({
+                    url: this.url.goodsData,
+                    method: 'get',
+                    params: {
+                        type: type,
+                        page: page
+                    }
+                }).then(res => {
+                    console.log(res.data)
+                    let data = res.data.list
+                    data.forEach(item => {
+                        this.goods[type].list.push(item)
+                    })
+                    this.bscroll.finishPullUp()
+                })
+            }
         }
     }
 </script>
 
 <style scoped>
-
+    #wrap {
+        height: calc(100vh - 94px);
+        overflow: hidden;
+        margin-top: 44px;
+    }
 </style>
