@@ -1,10 +1,10 @@
 <template>
     <div>
         <div class="recommend">
-            <div class="item" v-for="(item,index) in recommendList">
+            <div class="item" v-for="(item,index) in recommendList" :key="index">
                 <a :href="item.link">
                     <img :src="item.image" alt="">
-                    <span class="title">{{item.title}}</span>
+                    <p class="title">{{item.title}}</p>
                 </a>
             </div>
         </div>
@@ -29,18 +29,19 @@
     .recommend {
         width: 100vw;
         display: flex;
-        font-size: 13px;
         text-align: center;
         border-bottom: 10px solid #eee;
         padding: 10px 0;
     }
-    .recommend img {
-        width: 25vw;
-        /*height: 80px;*/
+    .item{
         flex: 1;
-        margin-bottom: 5px;
+    }
+    .recommend img {
+        width: 80px;
+        height: 80px;
     }
     .recommend .title{
+        font-size: 13px;
         color: #666;
     }
 </style>

@@ -2,7 +2,7 @@
     <div>
         <swiper ref="mySwiper" :options="swiperOptions" class="swiper">
             <swiper-slide v-for="(item,index) in bannerList" :key="index">
-                <a :href="item.link"><img :src="item.image" alt="" @load="swiperLoad"></a>
+               <img :src="item" alt="" @load="swiperLoad">
             </swiper-slide>
             <div class="swiper-pagination" slot="pagination"></div>
         </swiper>
@@ -14,11 +14,11 @@
     import 'swiper/css/swiper.css'
 
     export default {
-        name: "HomeSwiper",
+        name: "ProductInfoSwiper",
         props: {
-            bannerList: {
-                type: Array,
-                default() {
+            bannerList:{
+                type:Array,
+                default(){
                     return []
                 }
             }
@@ -41,16 +41,20 @@
         },
         methods:{
             swiperLoad(){
-                this.$emit('swiperLoad')
+                this.$emit("swiperLoadEnd")
             }
         }
     }
 </script>
 
 <style scoped>
+    .swiper{
+        width: 100vw;
+        height: 300px;
+        margin-top: 44px;
+    }
     .swiper img {
         width: 100%;
-        height: 100%;
     }
 
     .swiper-container {

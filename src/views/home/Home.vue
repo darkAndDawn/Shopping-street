@@ -2,27 +2,33 @@
     <div>
         <!--        头部导航-->
         <home-nav-bar></home-nav-bar>
+        <!--        底部导航-->
+        <tab-bar-main></tab-bar-main>
+        <!--        tab切换-->
+        <home-tab-control class="tab_control" :tabData="['流行','新款','精选']" @tabClick="tabClick" v-show="isTabTop"></home-tab-control>
         <div id="wrap">
             <div class="content">
                 <!--        轮播图-->
-                <home-swiper :bannerList="bannerList"></home-swiper>
+                <home-swiper @swiperLoad="swiperLoad" :bannerList="bannerList"></home-swiper>
                 <!--        推荐-->
                 <home-recommend :recommendList="recommendList"></home-recommend>
                 <!--        流行-->
                 <home-pop></home-pop>
                 <!--        tab切换-->
-                <home-tab-control :tabData="['流行','新款','精选']" @tabClick="tabClick"></home-tab-control>
+                <home-tab-control ref="control" :tabData="['流行','新款','精选']" @tabClick="tabClick"></home-tab-control>
                 <!--        商品列表-->
                 <home-message-show :showList="goods[clickType].list" :bscroll="bscroll"></home-message-show>
             </div>
         </div>
         <!--        回到顶部-->
         <go-top @click.native="goTop" v-show="isTopShow"></go-top>
+
     </div>
 </template>
 
 <script>
     import HomeNavBar from "./child/HomeNavBar";
+    import TabBarMain from "../../components/tabBarMain/TabBarMain";
     import HomeSwiper from "./child/HomeSwiper";
     import HomeRecommend from "./child/HomeRecommend";
     import HomePop from "./child/HomePop";
@@ -35,6 +41,7 @@
         name: "Home",
         components: {
             HomeNavBar,
+            TabBarMain,
             HomeSwiper,
             HomeRecommend,
             HomePop,
@@ -44,6 +51,8 @@
         },
         data() {
             return {
+                isTabTop:false,
+                tabDistTop:0,
                 isTopShow: false,
                 bscroll: null,
                 bannerList: [],//轮播图数据
@@ -61,6 +70,7 @@
             this.getGoodsData('pop')
             this.getGoodsData('new')
             this.getGoodsData('sell')
+
         },
         mounted() {
             this.bscroll = new Scroll('#wrap', {
@@ -71,10 +81,15 @@
                 this.getGoodsData(this.clickType)
             })
             this.bscroll.on('scroll', o => {
-               this.isTopShow = -o.y > 1500
+                this.isTopShow = -o.y > 1500
+                this.isTabTop = -o.y >= this.tabDistTop - 44
             })
         },
         methods: {
+            //轮播图加载完成
+            swiperLoad(){
+                this.tabDistTop = this.$refs.control.$el.offsetTop
+            },
             //回到顶部
             goTop() {
                 this.bscroll.scrollTo(0, 0, 400)
@@ -113,7 +128,7 @@
                         page: page
                     }
                 }).then(res => {
-                    console.log(res.data)
+
                     let data = res.data.list
                     data.forEach(item => {
                         this.goods[type].list.push(item)
@@ -130,5 +145,10 @@
         height: calc(100vh - 94px);
         overflow: hidden;
         margin-top: 44px;
+    }
+    .tab_control{
+        position: fixed;
+        background: white;
+        z-index: 999;
     }
 </style>

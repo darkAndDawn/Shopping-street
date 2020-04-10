@@ -1,7 +1,8 @@
 <template>
   <div id="app">
-    <tab-bar-main></tab-bar-main>
-    <router-view/>
+<!--    keep-alive路由跳转不刷新数据-->
+    <keep-alive include="Home"><router-view/></keep-alive>
+
   </div>
 </template>
 
@@ -9,11 +10,7 @@
 @import "assets/css/base.css";
 </style>
 <script>
-  import TabBarMain from "./components/tabBarMain/TabBarMain";
   export default {
     name:'App',
-    components:{
-      TabBarMain
-    }
   }
 </script>

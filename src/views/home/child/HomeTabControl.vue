@@ -1,18 +1,17 @@
 <template>
     <div class="tab">
-        <div v-for="(item,index) in tabData" class="item" :class="{active:index==activeIndex}" @click="tabFn(index)">
+        <div v-for="(item,index) in tabData" :key="index" class="item" :class="{active:index==activeIndex}" @click="tabFn(index)">
             <span>{{item}}</span>
         </div>
     </div>
 </template>
 
 <script>
+    const comTabIndex = {activeIndex:0}
     export default {
         name: "HomeTabControl",
         data() {
-            return{
-                activeIndex:0,
-            }
+            return comTabIndex
         },
         props: {
             tabData: {
@@ -39,7 +38,6 @@
         display: flex;
         text-align: center;
         line-height: 40px;
-
     }
 
     .item {
