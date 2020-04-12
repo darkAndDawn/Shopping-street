@@ -14,11 +14,10 @@
                 <product-show @showLoadEnd="showLoadEnd" :productShow="productShow"></product-show>
                 <!--        商品参数-->
                 <product-params :productParams="productParams"></product-params>
-
             </div>
         </div>
         <!--                底部 -->
-        <product-bottom-bar></product-bottom-bar>
+        <product-bottom-bar @addCart="addCart"></product-bottom-bar>
     </div>
 </template>
 
@@ -55,7 +54,9 @@
                     oldPrice: null,
                     discountDesc: null,
                     columns: null,
-                    services: null
+                    services: null,
+                    lowNowPrice:null,
+                    desc:null
                 },
                 //店铺信息
                 productShop: {
@@ -80,6 +81,20 @@
             this.getProductInfoData()
         },
         methods: {
+            //加入购物车
+            addCart(){
+                this.$toast('加入购物车成功')
+                let obj= {
+                    iid:this.productId,
+                    img:this.bannerList[0],
+                    title:this.productInfo.title,
+                    price:this.productInfo.lowNowPrice,
+                    desc:this.productInfo.desc,
+                    checked:true,
+                    count:1
+                }
+                this.$store.commit('addCartData',obj)
+            },
             swiperLoadEnd() {
                 this.bscroll.refresh()
             },
@@ -87,6 +102,7 @@
                 this.bscroll.refresh()
             },
             getProductInfoData() {
+                //请求数据
                 this.request({
                     url: this.url.ProductInfoData,
                     method: 'get',
@@ -95,6 +111,7 @@
                     }
                 }).then(res => {
                     console.log(res);
+                    //保存请求数据
                     this.bannerList = res.result.itemInfo.topImages;//轮播图
                     this.productInfo.title = res.result.itemInfo.title;//商品标题
                     this.productInfo.price = res.result.itemInfo.price;//商品价格
@@ -102,7 +119,9 @@
                     this.productInfo.discountDesc = res.result.itemInfo.discountDesc;//商品折扣
                     this.productInfo.columns = res.result.columns;//销量收藏
                     this.productInfo.services = res.result.shopInfo.services;//服务
-                    //this.productInfo = JSON.parse(JSON.stringify(this.productInfo));
+                    this.productInfo.lowNowPrice = res.result.itemInfo.lowNowPrice;//价格 -- 购物车
+                    this.productInfo.desc = res.result.itemInfo.desc;//商品描述 -- 购物车
+
                     //店铺信息
                     this.productShop.shopLogo = res.result.shopInfo.shopLogo;//店铺Logo
                     this.productShop.shopName = res.result.shopInfo.name;//店铺名称
@@ -110,6 +129,8 @@
                     this.productShop.cGoods = res.result.shopInfo.cGoods;//全部宝贝
                     this.productShop.score = res.result.shopInfo.score;//评分
                     this.productShop.shopUrl = res.result.shopInfo.shopUrl;//店铺链接
+
+
                     //商品展示
                     this.productShow = res.result.detailInfo.detailImage[0].list;//图片展示
                     //参数

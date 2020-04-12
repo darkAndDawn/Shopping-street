@@ -1,7 +1,8 @@
 <template>
     <div class="goods">
         <div v-for="(item,index) in showList" :key="index" class="item" @click="itemClick(item.iid)">
-            <img :src="item.show.img" alt="" @load="imgLoad">
+            <img v-lazy="item.show.img" alt="" @load="imgLoad">
+
             <div class="bottom">
                 <p class="title">{{item.title}}</p>
                 <span class="price">￥{{item.price}}</span>
@@ -39,7 +40,6 @@
                this.bscroll.refresh()
             },
             itemClick(id){
-                console.log(id)
                 this.$router.push({
                     path:'/productinfo',
                     query:{
