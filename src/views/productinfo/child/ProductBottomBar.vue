@@ -84,23 +84,23 @@
     .bottomRight .addCart{
         background-color: #FF8A00;
         width: 50%;
-        height: 30px;
-        margin-top: 14px;
-        font-size: 13px;
-        border-radius: 10px 0 0 10px;
+        height: 40px;
+        margin-top: 8px;
+        font-size: 14px;
+        border-radius: 20px 0 0 20px;
         text-align: center;
-        line-height: 30px;
+        line-height: 40px;
         color: #fff;
     }
     .bottomRight .buy{
         background-color: #FF4400;
         width: 50%;
-        height: 30px;
-        margin-top: 14px;
-        font-size: 13px;
-        border-radius: 0 10px 10px 0;
+        height: 40px;
+        margin-top: 8px;
+        font-size: 14px;
+        border-radius: 0 20px 20px 0;
         text-align: center;
-        line-height: 30px;
+        line-height: 40px;
         color: #fff;
     }
 </style>
